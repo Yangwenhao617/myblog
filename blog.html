@@ -1,0 +1,2390 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>杨文浩的博客 - 记录思考，见证成长</title>
+    <style>
+        /* CSS Reset & Variables */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #FAFAFA;
+            --bg-secondary: #FFFFFF;
+            --bg-card: #FFFFFF;
+            --bg-modal: rgba(0, 0, 0, 0.5);
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --text-muted: #999999;
+            --accent-color: #2C3E50;
+            --accent-hover: #1A252F;
+            --border-color: #E0E0E0;
+            --shadow: 0 2px 4px rgba(0,0,0,0.02);
+            --shadow-hover: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+            --transition: all 0.3s ease;
+            --success-color: #10B981;
+            --error-color: #EF4444;
+            --warning-color: #F59E0B;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #1A1A1A;
+            --bg-secondary: #2D2D2D;
+            --bg-card: #2D2D2D;
+            --bg-modal: rgba(0, 0, 0, 0.8);
+            --text-primary: #E0E0E0;
+            --text-secondary: #A0A0A0;
+            --text-muted: #707070;
+            --accent-color: #4A90E2;
+            --accent-hover: #5BA3F5;
+            --border-color: #404040;
+            --shadow: 0 2px 4px rgba(0,0,0,0.3);
+            --shadow-hover: 0 4px 12px rgba(0,0,0,0.5);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.6);
+        }
+
+        /* Base Styles */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+            transition: var(--transition);
+            overflow-x: hidden;
+        }
+
+        a {
+            color: var(--accent-color);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        a:hover {
+            color: var(--accent-hover);
+        }
+
+        button {
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        /* Container & Grid System */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .grid-12 {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        [data-theme="dark"] .navbar {
+            background: rgba(26, 26, 26, 0.8);
+        }
+
+        .navbar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 64px;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            font-weight: 500;
+            position: relative;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--accent-color);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-color);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after, .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .navbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .search-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-input {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            width: 200px;
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            width: 240px;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-secondary);
+        }
+
+        .theme-toggle svg {
+            width: 20px;
+            height: 20px;
+            fill: var(--text-primary);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            font-size: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 64px;
+            left: 0;
+            right: 0;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px;
+            z-index: 999;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .mobile-menu.active {
+            display: block;
+        }
+
+        .mobile-menu ul {
+            list-style: none;
+        }
+
+        .mobile-menu li {
+            margin-bottom: 16px;
+        }
+
+        .mobile-menu a {
+            color: var(--text-primary);
+            font-size: 1.125rem;
+            display: block;
+            padding: 8px 0;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 80px 0;
+            text-align: center;
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--accent-color) 0%, transparent 50%);
+            opacity: 0.05;
+            animation: pulse 15s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-bottom: 16px;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeInUp 0.6s ease-out 0.2s backwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 40px 0;
+            min-height: 60vh;
+        }
+
+        /* Article List */
+        .articles-section {
+            grid-column: span 8;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 12px;
+        }
+
+        .filter-btn {
+            padding: 6px 12px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        .article-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .article-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent-color);
+            transform: scaleY(0);
+            transition: var(--transition);
+        }
+
+        .article-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .article-card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .article-meta {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 12px;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .article-date::before {
+            content: "📅 ";
+        }
+
+        .article-readtime::before {
+            content: "⏱️ ";
+        }
+
+        .article-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .article-excerpt {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+
+        .article-actions {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: var(--transition);
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .action-btn:hover {
+            color: var(--accent-color);
+            background: var(--bg-primary);
+        }
+
+        .action-btn.liked {
+            color: #E74C3C;
+        }
+
+        .action-btn.liked::before {
+            content: '❤️';
+        }
+
+        .action-btn:not(.liked)::before {
+            content: '🤍';
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 32px;
+        }
+
+        .page-btn {
+            padding: 8px 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .page-btn:hover {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        .page-btn.active {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            grid-column: span 4;
+        }
+
+        .sidebar-widget {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .widget-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Profile Widget */
+        .profile-widget {
+            text-align: center;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            background: var(--accent-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .profile-avatar:hover {
+            transform: scale(1.1);
+        }
+
+        .profile-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .profile-bio {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+
+        .profile-stats {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 16px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-color);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .edit-profile-btn {
+            padding: 8px 16px;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.875rem;
+        }
+
+        .edit-profile-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .login-status {
+            margin-top: 16px;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+        }
+
+        .login-status.logged-in {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+            border: 1px solid var(--success-color);
+        }
+
+        .login-status.guest {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning-color);
+            border: 1px solid var(--warning-color);
+        }
+
+        .login-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 8px;
+            font-size: 0.875rem;
+        }
+
+        .login-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .logout-btn {
+            background: var(--error-color);
+            color: white;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 8px;
+            font-size: 0.875rem;
+        }
+
+        .logout-btn:hover {
+            background: #DC2626;
+        }
+
+        .author-action-btn {
+            width: 100%;
+            padding: 10px;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.95rem;
+            margin-top: 12px;
+        }
+
+        .author-action-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .delete-article-btn {
+            background: var(--error-color);
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: var(--transition);
+        }
+
+        .delete-article-btn:hover {
+            background: #DC2626;
+        }
+
+        .tag-select-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag-option {
+            padding: 6px 12px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: var(--transition);
+        }
+
+        .tag-option.selected {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        .editor-toolbar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .editor-toolbar button {
+            padding: 4px 12px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+
+        .editor-toolbar button:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        /* Tags Widget */
+        .tags-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 0.875rem;
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+        }
+
+        .tag:hover, .tag.active {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        /* Archive Widget */
+        .archive-list {
+            list-style: none;
+        }
+
+        .archive-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .archive-item:hover {
+            color: var(--accent-color);
+            padding-left: 8px;
+        }
+
+        .archive-item:last-child {
+            border-bottom: none;
+        }
+
+        .archive-month {
+            color: var(--text-primary);
+        }
+
+        .archive-count {
+            background: var(--accent-color);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--bg-secondary);
+            padding: 40px 0;
+            margin-top: 40px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-color);
+        }
+
+        .copyright {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-modal);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            border-radius: 12px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: var(--shadow-lg);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .modal-footer {
+            padding: 24px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        /* Article Detail Modal */
+        .article-detail {
+            line-height: 1.8;
+        }
+
+        .article-detail-meta {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .article-detail-content {
+            color: var(--text-primary);
+            font-size: 1.05rem;
+        }
+
+        .article-detail-content p {
+            margin-bottom: 16px;
+        }
+
+        .article-detail-content h2 {
+            color: var(--accent-color);
+            margin: 24px 0 16px;
+        }
+
+        .article-detail-content code {
+            background: var(--bg-primary);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        .article-detail-content pre {
+            background: var(--bg-primary);
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 16px 0;
+        }
+
+        /* Comment Section */
+        .comments-section {
+            margin-top: 32px;
+        }
+
+        .comment-form {
+            margin-bottom: 24px;
+        }
+
+        .comment-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 100px;
+            margin-bottom: 12px;
+        }
+
+        .comment-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .comment-submit {
+            padding: 10px 24px;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .comment-submit:hover {
+            background: var(--accent-hover);
+        }
+
+        .comment-list {
+            list-style: none;
+        }
+
+        .comment-item {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .comment-author {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .comment-date {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .comment-content {
+            color: var(--text-secondary);
+        }
+
+        .comment-actions {
+            margin-top: 8px;
+            display: flex;
+            gap: 16px;
+        }
+
+        .comment-action {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: var(--transition);
+        }
+
+        .comment-action:hover {
+            color: var(--accent-color);
+        }
+
+        /* Edit Profile Form */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-primary);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--accent-color);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-hover);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            background: var(--success-color);
+        }
+
+        .toast.error {
+            background: var(--error-color);
+        }
+
+        .toast.warning {
+            background: var(--warning-color);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .grid-12 {
+                grid-template-columns: 1fr;
+            }
+
+            .articles-section,
+            .sidebar {
+                grid-column: span 12;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .search-box {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+        }
+
+        /* Smooth Transitions */
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container navbar-content">
+            <div class="logo" onclick="showHome()">杨文浩的博客</div>
+            <ul class="nav-links">
+                <li><a href="#home" class="nav-link active" data-section="home">首页</a></li>
+                <li><a href="#articles" class="nav-link" data-section="articles">文章</a></li>
+                <li><a href="#archive" class="nav-link" data-section="archive">归档</a></li>
+                <li><a href="#about" class="nav-link" data-section="about">关于我</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="搜索文章..." id="searchInput">
+                </div>
+                <button class="theme-toggle" id="themeToggle" title="切换主题">
+                    <svg id="sunIcon" viewBox="0 0 24 24" style="display: none;">
+                        <path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0 .39-.39.39-1.03 0-1.41l-1.06-1.06zm1.06-10.96c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/>
+                    </svg>
+                    <svg id="moonIcon" viewBox="0 0 24 24">
+                        <path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/>
+                    </svg>
+                </button>
+                <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <ul>
+            <li><a href="#home" class="mobile-nav-link" data-section="home">首页</a></li>
+            <li><a href="#articles" class="mobile-nav-link" data-section="articles">文章</a></li>
+            <li><a href="#archive" class="mobile-nav-link" data-section="archive">归档</a></li>
+            <li><a href="#about" class="mobile-nav-link" data-section="about">关于我</a></li>
+        </ul>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container hero-content">
+            <h1>记录思考，见证成长</h1>
+            <p>分享技术见解，记录学习历程，与您一起探索编程世界</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content" id="articles">
+        <div class="container">
+            <div class="grid-12">
+                <!-- Articles Section -->
+                <section class="articles-section">
+                    <div class="section-header">
+                        <h2 class="section-title" id="articlesTitle">最新文章</h2>
+                        <div class="filter-controls">
+                            <button class="filter-btn active" data-filter="all">全部</button>
+                            <button class="filter-btn" data-filter="frontend">前端</button>
+                            <button class="filter-btn" data-filter="backend">后端</button>
+                            <button class="filter-btn" data-filter="tools">工具</button>
+                        </div>
+                    </div>
+                    <div id="articlesList">
+                        <!-- Articles will be rendered here -->
+                    </div>
+                    <div class="pagination" id="pagination">
+                        <!-- Pagination will be rendered here -->
+                    </div>
+                </section>
+
+                <!-- Sidebar -->
+                <aside class="sidebar" id="archive">
+                    <!-- Profile Widget -->
+                    <div class="sidebar-widget profile-widget" id="about">
+                        <div class="profile-avatar" id="profileAvatar">博</div>
+                        <h3 class="profile-name" id="profileName">博客作者</h3>
+                        <p class="profile-bio" id="profileBio">热爱技术的开发者，专注于前端开发和用户体验设计。在这里分享我的学习心得和技术见解。</p>
+                        <div class="profile-stats">
+                            <div class="stat-item">
+                                <div class="stat-number" id="articleCount">6</div>
+                                <div class="stat-label">文章</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number" id="tagCount">10</div>
+                                <div class="stat-label">标签</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number" id="likeCount">0</div>
+                                <div class="stat-label">获赞</div>
+                            </div>
+                        </div>
+                        <div class="login-status guest" id="loginStatus">
+                            <span id="loginStatusText">访客模式</span>
+                            <button class="login-btn" id="authBtn" onclick="toggleAuth()">登录作者</button>
+                        </div>
+                        <button class="edit-profile-btn" id="editProfileBtn" onclick="openEditProfileModal()" style="display: none;">编辑资料</button>
+                        <button class="author-action-btn" id="uploadArticleBtn" onclick="openUploadArticleModal()" style="display: none;">➕ 发布新文章</button>
+                    </div>
+
+                    <!-- Manage Articles Widget (Author Only) -->
+                    <div class="sidebar-widget" id="manageArticlesWidget" style="display: none;">
+                        <div class="widget-title">
+                            <span>文章管理</span>
+                        </div>
+                        <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 12px;">已发布 <span id="manageArticleCount">0</span> 篇文章</p>
+                        <ul class="archive-list" id="manageArticlesList">
+                            <!-- Manage list will be rendered here -->
+                        </ul>
+                    </div>
+
+                    <!-- Popular Tags -->
+                    <div class="sidebar-widget">
+                        <div class="widget-title">
+                            <span>热门标签</span>
+                            <span style="font-size: 0.875rem; color: var(--text-muted); cursor: pointer;" onclick="resetTagFilter()">重置</span>
+                        </div>
+                        <div class="tags-list" id="tagsList">
+                            <!-- Tags will be rendered here -->
+                        </div>
+                    </div>
+
+                    <!-- Archive -->
+                    <div class="sidebar-widget">
+                        <div class="widget-title">
+                            <span>文章归档</span>
+                        </div>
+                        <ul class="archive-list" id="archiveList">
+                            <!-- Archive will be rendered here -->
+                        </ul>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <p class="copyright">© 2026 我的博客. 保留所有权利.</p>
+            <div class="footer-links">
+                <a href="https://github.com" target="_blank">GitHub</a>
+                <a href="https://twitter.com" target="_blank">Twitter</a>
+                <a href="https://juejin.cn" target="_blank">掘金</a>
+                <a href="https://zhihu.com" target="_blank">知乎</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Article Detail Modal -->
+    <div class="modal" id="articleModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalArticleTitle">文章标题</h3>
+                <button class="modal-close" onclick="closeModal('articleModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="article-detail">
+                    <div class="article-detail-meta">
+                        <span id="modalArticleDate">📅 2026.09.01</span>
+                        <span id="modalArticleReadtime">⏱️ 8 分钟</span>
+                    </div>
+                    <div class="article-detail-content" id="modalArticleContent">
+                        <!-- Article content will be rendered here -->
+                    </div>
+                </div>
+
+                <div class="comments-section">
+                    <h4>评论 (<span id="commentCount">0</span>)</h4>
+                    <div class="comment-form">
+                        <textarea class="comment-input" id="commentInput" placeholder="写下你的评论..."></textarea>
+                        <button class="comment-submit" onclick="submitComment()">发表评论</button>
+                    </div>
+                    <ul class="comment-list" id="commentList">
+                        <!-- Comments will be rendered here -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3 class="modal-title">作者登录</h3>
+                <button class="modal-close" onclick="closeModal('loginModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">用户名</label>
+                    <input type="text" class="form-input" id="loginUsername" placeholder="请输入用户名">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">密码</label>
+                    <input type="password" class="form-input" id="loginPassword" placeholder="请输入密码">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('loginModal')">取消</button>
+                <button class="btn btn-primary" onclick="performLogin()">登录</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Article Modal -->
+    <div class="modal" id="uploadArticleModal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h3 class="modal-title">发布新文章</h3>
+                <button class="modal-close" onclick="closeModal('uploadArticleModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">文章标题 *</label>
+                    <input type="text" class="form-input" id="articleTitleInput" placeholder="请输入文章标题">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">文章摘要 *</label>
+                    <textarea class="form-input" id="articleExcerptInput" rows="2" placeholder="请输入文章摘要，简要介绍文章内容"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">分类</label>
+                    <select class="form-input" id="articleCategoryInput">
+                        <option value="frontend">前端</option>
+                        <option value="backend">后端</option>
+                        <option value="tools">工具</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">标签</label>
+                    <div class="tag-select-list" id="articleTagSelectList">
+                        <!-- Tags will be rendered here -->
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">阅读时长</label>
+                    <input type="text" class="form-input" id="articleReadtimeInput" placeholder="例如：10 分钟">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">正文内容 *</label>
+                    <div class="editor-toolbar">
+                        <button type="button" onclick="insertMarkdown('## ')">标题</button>
+                        <button type="button" onclick="insertMarkdown('**', '**')">加粗</button>
+                        <button type="button" onclick="insertMarkdown('*', '*')">斜体</button>
+                        <button type="button" onclick="insertMarkdown('\n```\n', '\n```\n')">代码块</button>
+                        <button type="button" onclick="insertMarkdown('\n> ')">引用</button>
+                        <button type="button" onclick="insertMarkdown('\n- ')">列表</button>
+                    </div>
+                    <textarea class="form-input" id="articleContentInput" rows="12" placeholder="请输入文章正文，支持简单的 Markdown 格式..."></textarea>
+                    <p style="color: var(--text-muted); font-size: 0.75rem; margin-top: 8px;">
+                        提示：使用 ## 表示二级标题，**文本** 表示加粗，*文本* 表示斜体，``` 包裹代码块
+                    </p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('uploadArticleModal')">取消</button>
+                <button class="btn btn-primary" onclick="publishArticle()">发布文章</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div class="modal" id="editProfileModal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3 class="modal-title">编辑个人资料</h3>
+                <button class="modal-close" onclick="closeModal('editProfileModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">昵称</label>
+                    <input type="text" class="form-input" id="editName" placeholder="你的昵称">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">个人简介</label>
+                    <textarea class="form-input" id="editBio" rows="3" placeholder="一句话介绍自己"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('editProfileModal')">取消</button>
+                <button class="btn btn-primary" onclick="saveProfile()">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <span id="toastIcon">✓</span>
+        <span id="toastMessage">操作成功</span>
+    </div>
+
+    <script>
+        // Application State
+        const state = {
+            articles: [],
+            filteredArticles: [],
+            currentPage: 1,
+            itemsPerPage: 5,
+            currentFilter: 'all',
+            currentTag: null,
+            searchQuery: '',
+            activeArticle: null,
+            comments: {},
+            likes: {},
+            profile: {
+                name: '博客作者',
+                bio: '热爱技术的开发者，专注于前端开发和用户体验设计。在这里分享我的学习心得和技术见解。',
+                avatar: '博'
+            },
+            totalLikes: 0,
+            isAuthenticated: false, // 是否已登录为作者
+            currentUser: null, // 当前登录用户
+            selectedUploadTags: []
+        };
+
+        // Author credentials (在真实应用中应该存储在服务器端)
+        const AUTHOR_CREDENTIALS = {
+            username: 'admin',
+            password: 'yangwenhao666'
+        };
+
+        // Mock Data
+        const articlesData = [
+            {
+                id: 1,
+                date: '2026.09.01',
+                title: '深入理解 JavaScript 闭包',
+                excerpt: '闭包是 JavaScript 中最重要的概念之一。本文将深入探讨闭包的原理、应用场景以及常见的陷阱，帮助你更好地理解这一核心概念。',
+                readtime: '8 分钟',
+                category: 'frontend',
+                tags: ['JavaScript', '前端', '基础'],
+                content: `
+                    <p>闭包是 JavaScript 中最强大的特性之一，但也是最容易让初学者困惑的概念。本文将从基础概念开始，逐步深入讲解闭包的原理和应用。</p>
+                    <h2>什么是闭包？</h2>
+                    <p>闭包是指有权访问另一个函数作用域中变量的函数。创建闭包的常见方式，就是在一个函数内部创建另一个函数。</p>
+                    <pre><code>function createCounter() {
+    let count = 0;
+    return function() {
+        return ++count;
+    };
+}
+
+const counter = createCounter();
+console.log(counter()); // 1
+console.log(counter()); // 2</code></pre>
+                    <h2>闭包的应用场景</h2>
+                    <p>闭包在实际开发中有很多应用场景：</p>
+                    <p>1. 数据私有化和封装</p>
+                    <p>2. 函数柯里化</p>
+                    <p>3. 模块模式</p>
+                    <p>4. 事件处理和回调</p>
+                    <h2>注意事项</h2>
+                    <p>使用闭包时要注意内存泄漏问题，因为闭包会引用外部函数的变量，导致这些变量无法被垃圾回收。</p>
+                `
+            },
+            {
+                id: 2,
+                date: '2026.08.28',
+                title: 'React 性能优化最佳实践',
+                excerpt: '在实际项目开发中，React 应用的性能优化至关重要。本文总结了 10 个实用的性能优化技巧，让你的 React 应用运行更加流畅。',
+                readtime: '12 分钟',
+                category: 'frontend',
+                tags: ['React', '性能优化', '前端'],
+                content: `
+                    <p>React 应用的性能优化是一个重要的话题。本文将分享一些经过验证的最佳实践，帮助你构建更高效的 React 应用。</p>
+                    <h2>1. 使用 React.memo</h2>
+                    <p>React.memo 是一个高阶组件，它可以对组件进行浅比较，避免不必要的重新渲染。</p>
+                    <pre><code>const MemoComponent = React.memo(function MyComponent(props) {
+    // 组件逻辑
+});</code></pre>
+                    <h2>2. 使用 useMemo 和 useCallback</h2>
+                    <p>这两个 Hook 可以帮助您缓存计算结果和函数，避免在每次渲染时重新创建。</p>
+                    <h2>3. 代码分割和懒加载</h2>
+                    <p>使用 React.lazy 和 Suspense 实现组件的懒加载，减少初始加载体积。</p>
+                `
+            },
+            {
+                id: 3,
+                date: '2026.08.25',
+                title: 'CSS Grid 布局完全指南',
+                excerpt: 'CSS Grid 是现代 Web 布局的强大工具。从基础概念到高级技巧，本文将带你全面掌握 Grid 布局，轻松应对复杂的布局需求。',
+                readtime: '10 分钟',
+                category: 'frontend',
+                tags: ['CSS', '布局', '前端'],
+                content: `
+                    <p>CSS Grid 是一个二维布局系统，可以同时处理行和列，是现代 Web 布局的强大工具。</p>
+                    <h2>基础概念</h2>
+                    <p>Grid 布局由容器和项目组成。容器是设置了 display: grid 的元素，项目是容器的直接子元素。</p>
+                    <pre><code>.container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}</code></pre>
+                    <h2>常用属性</h2>
+                    <p>1. grid-template-columns 和 grid-template-rows</p>
+                    <p>2. grid-gap</p>
+                    <p>3. grid-area</p>
+                    <p>4. grid-template-areas</p>
+                `
+            },
+            {
+                id: 4,
+                date: '2026.08.20',
+                title: 'TypeScript 高级类型实战',
+                excerpt: 'TypeScript 的类型系统非常强大。本文通过实际案例，介绍泛型、条件类型、映射类型等高级特性的使用方法。',
+                readtime: '15 分钟',
+                category: 'frontend',
+                tags: ['TypeScript', '前端', '类型系统'],
+                content: `
+                    <p>TypeScript 的类型系统是其最强大的特性之一。本文将深入讲解高级类型的使用方法。</p>
+                    <h2>泛型</h2>
+                    <p>泛型允许我们创建可重用的组件，同时保持类型安全。</p>
+                    <pre><code>function identity<T>(arg: T): T {
+    return arg;
+}</code></pre>
+                    <h2>条件类型</h2>
+                    <p>条件类型可以根据类型关系选择类型。</p>
+                    <pre><code>type IsArray<T> = T extends any[] ? true : false;</code></pre>
+                    <h2>映射类型</h2>
+                    <p>映射类型可以基于旧类型创建新类型。</p>
+                `
+            },
+            {
+                id: 5,
+                date: '2026.08.15',
+                title: '前端工程化实践指南',
+                excerpt: '随着项目规模的增大，工程化变得越来越重要。本文分享在前端工程化实践中的经验和心得，包括构建、测试、部署等方面。',
+                readtime: '18 分钟',
+                category: 'tools',
+                tags: ['工程化', '构建工具', '最佳实践'],
+                content: `
+                    <p>前端工程化是现代 Web 开发的必备技能。本文将分享一些实践经验和最佳实践。</p>
+                    <h2>构建工具选择</h2>
+                    <p>选择合适的构建工具对项目效率至关重要。主流的构建工具包括 Webpack、Vite、Rollup 等。</p>
+                    <h2>代码规范</h2>
+                    <p>建立统一的代码规范可以提高团队协作效率。推荐使用 ESLint 和 Prettier。</p>
+                    <h2>测试策略</h2>
+                    <p>完善的测试体系可以保证代码质量。包括单元测试、集成测试和端到端测试。</p>
+                `
+            },
+            {
+                id: 6,
+                date: '2026.08.10',
+                title: 'Webpack5 新特性解析',
+                excerpt: 'Webpack5 带来了许多令人兴奋的新特性。本文将详细介绍模块联邦、缓存优化等新功能，帮助你更好地升级和优化构建配置。',
+                readtime: '14 分钟',
+                category: 'tools',
+                tags: ['Webpack', '构建工具', '前端工程'],
+                content: `
+                    <p>Webpack5 是一个重要的版本更新，带来了许多新特性和性能改进。</p>
+                    <h2>模块联邦</h2>
+                    <p>模块联邦是 Webpack5 的旗舰功能，它允许多个 Webpack 构建一起工作。</p>
+                    <h2>持久化缓存</h2>
+                    <p>Webpack5 改进了缓存机制，可以显著提高构建速度。</p>
+                    <h2>更小的包体积</h2>
+                    <p>通过 Tree Shaking 和代码分割的改进，Webpack5 可以生成更小的最终包。</p>
+                `
+            },
+            {
+                id: 7,
+                date: '2026.08.05',
+                title: 'Node.js 性能优化实战',
+                excerpt: 'Node.js 应用的性能优化涉及多个方面。本文从事件循环、内存管理、异步处理等角度，分享实用的优化技巧。',
+                readtime: '16 分钟',
+                category: 'backend',
+                tags: ['Node.js', '性能优化', '后端'],
+                content: `
+                    <p>Node.js 性能优化是一个系统工程，需要从多个角度进行考虑。</p>
+                    <h2>事件循环优化</h2>
+                    <p>理解 Node.js 的事件循环机制对于性能优化至关重要。</p>
+                    <h2>内存管理</h2>
+                    <p>合理使用内存，避免内存泄漏，是 Node.js 应用稳定性的关键。</p>
+                    <h2>异步处理</h2>
+                    <p>充分利用 Node.js 的异步特性，提高并发处理能力。</p>
+                `
+            },
+            {
+                id: 8,
+                date: '2026.08.01',
+                title: '数据库查询优化技巧',
+                excerpt: '数据库查询性能直接影响应用响应速度。本文分享 MySQL、PostgreSQL 等数据库的查询优化技巧和索引设计原则。',
+                readtime: '20 分钟',
+                category: 'backend',
+                tags: ['数据库', '性能优化', 'SQL'],
+                content: `
+                    <p>数据库查询优化是后端开发的重要技能。本文将分享一些实用的优化技巧。</p>
+                    <h2>索引设计</h2>
+                    <p>合理的索引设计可以大大提高查询性能。</p>
+                    <h2>查询优化</h2>
+                    <p>避免全表扫描，使用合适的查询语句，是优化的基础。</p>
+                    <h2>数据库连接池</h2>
+                    <p>使用连接池可以减少连接创建的开销，提高应用性能。</p>
+                `
+            }
+        ];
+
+        const allTags = ['JavaScript', 'React', 'Vue', 'TypeScript', 'CSS', '性能优化', '工程化', 'Webpack', 'Node.js', '数据库', 'SQL', '构建工具', '前端', '后端', '基础', '类型系统', '最佳实践', '前端工程'];
+
+        // Initialize Application
+        function initApp() {
+            // Load data
+            if (savedArticles) {
+                const savedArticleList = JSON.parse(savedArticles);
+                state.articles = [...articlesData, ...savedArticleList];
+            } else {
+                state.articles = [...articlesData];
+            }
+            state.filteredArticles = [...state.articles];
+
+            // Load from localStorage
+            loadFromStorage();
+
+            // Render initial state
+            renderArticles();
+            renderTags();
+            renderArchive();
+            updateStats();
+            updateProfileUI();
+
+            // Initialize components
+            initThemeToggle();
+            initMobileMenu();
+            initSearch();
+            initFilters();
+            initNavigation();
+        }
+
+        // Storage Functions
+        function loadFromStorage() {
+            const savedLikes = localStorage.getItem('blog_likes');
+            const savedComments = localStorage.getItem('blog_comments');
+            const savedProfile = localStorage.getItem('blog_profile');
+            const savedAuth = localStorage.getItem('blog_auth');
+            const savedArticles = localStorage.getItem('blog_custom_articles');
+
+            if (savedLikes) {
+                state.likes = JSON.parse(savedLikes);
+                state.totalLikes = Object.values(state.likes).filter(Boolean).length;
+            }
+
+            if (savedComments) {
+                state.comments = JSON.parse(savedComments);
+            }
+
+            if (savedProfile) {
+                state.profile = JSON.parse(savedProfile);
+            }
+
+            if (savedArticles) {
+                const savedArticleList = JSON.parse(savedArticles);
+                state.articles = [...articlesData, ...savedArticleList];
+            }
+
+            // 加载登录状态，但会验证会话是否有效
+            if (savedAuth) {
+                const auth = JSON.parse(savedAuth);
+                // 简单的会话过期检查（24小时）
+                const now = new Date().getTime();
+                if (auth.expiresAt && auth.expiresAt > now) {
+                    state.isAuthenticated = true;
+                    state.currentUser = auth.username;
+                } else {
+                    localStorage.removeItem('blog_auth');
+                }
+            }
+        }
+
+        function saveToStorage() {
+            localStorage.setItem('blog_likes', JSON.stringify(state.likes));
+            localStorage.setItem('blog_comments', JSON.stringify(state.comments));
+            localStorage.setItem('blog_profile', JSON.stringify(state.profile));
+
+            // 保存自定义文章
+            const customArticles = state.articles.filter(a => a.isCustom);
+            localStorage.setItem('blog_custom_articles', JSON.stringify(customArticles));
+
+            // 保存登录状态
+            if (state.isAuthenticated && state.currentUser) {
+                const expiresAt = new Date().getTime() + (24 * 60 * 60 * 1000); // 24小时后过期
+                localStorage.setItem('blog_auth', JSON.stringify({
+                    username: state.currentUser,
+                    expiresAt: expiresAt
+                }));
+            } else {
+                localStorage.removeItem('blog_auth');
+            }
+        }
+
+        // Render Functions
+        function renderArticles() {
+            const container = document.getElementById('articlesList');
+            const start = (state.currentPage - 1) * state.itemsPerPage;
+            const end = start + state.itemsPerPage;
+            const pageArticles = state.filteredArticles.slice(start, end);
+
+            if (pageArticles.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📭</div>
+                        <p>没有找到相关文章</p>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = pageArticles.map(article => `
+                    <article class="article-card" data-id="${article.id}">
+                        <div class="article-meta">
+                            <span class="article-date">${article.date}</span>
+                            <span class="article-readtime">${article.readtime}</span>
+                        </div>
+                        <h3 class="article-title">${article.title}</h3>
+                        <p class="article-excerpt">${article.excerpt}</p>
+                        <div class="article-actions">
+                            <button class="action-btn ${state.likes[article.id] ? 'liked' : ''}"
+                                    onclick="event.stopPropagation(); toggleLike(${article.id})">
+                                <span>${state.likes[article.id] ? '已赞' : '点赞'}</span>
+                            </button>
+                            <button class="action-btn" onclick="event.stopPropagation(); openArticle(${article.id})">
+                                <span>阅读全文</span>
+                            </button>
+                            <button class="action-btn" onclick="event.stopPropagation(); shareArticle(${article.id})">
+                                <span>分享</span>
+                            </button>
+                        </div>
+                    </article>
+                `).join('');
+
+                // Add click handlers for article cards
+                document.querySelectorAll('.article-card').forEach(card => {
+                    card.addEventListener('click', () => {
+                        const articleId = parseInt(card.dataset.id);
+                        openArticle(articleId);
+                    });
+                });
+            }
+
+            renderPagination();
+        }
+
+        function renderPagination() {
+            const container = document.getElementById('pagination');
+            const totalPages = Math.ceil(state.filteredArticles.length / state.itemsPerPage);
+
+            if (totalPages <= 1) {
+                container.innerHTML = '';
+                return;
+            }
+
+            let html = `
+                <button class="page-btn" ${state.currentPage === 1 ? 'disabled' : ''} onclick="changePage(${state.currentPage - 1})">
+                    上一页
+                </button>
+            `;
+
+            for (let i = 1; i <= totalPages; i++) {
+                html += `
+                    <button class="page-btn ${state.currentPage === i ? 'active' : ''}" onclick="changePage(${i})">
+                        ${i}
+                    </button>
+                `;
+            }
+
+            html += `
+                <button class="page-btn" ${state.currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${state.currentPage + 1})">
+                    下一页
+                </button>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        function renderTags() {
+            const container = document.getElementById('tagsList');
+            container.innerHTML = allTags.map(tag => `
+                <span class="tag ${state.currentTag === tag ? 'active' : ''}" onclick="filterByTag('${tag}')">${tag}</span>
+            `).join('');
+        }
+
+        function renderArchive() {
+            const container = document.getElementById('archiveList');
+
+            // Group articles by month
+            const archiveMap = {};
+            state.articles.forEach(article => {
+                const month = article.date.substring(0, 7); // YYYY.MM
+                if (!archiveMap[month]) {
+                    archiveMap[month] = [];
+                }
+                archiveMap[month].push(article);
+            });
+
+            // Sort months in descending order
+            const sortedMonths = Object.keys(archiveMap).sort((a, b) => b.localeCompare(a));
+
+            container.innerHTML = sortedMonths.map(month => `
+                <li class="archive-item" onclick="filterByMonth('${month}')">
+                    <span class="archive-month">${month}</span>
+                    <span class="archive-count">${archiveMap[month].length}</span>
+                </li>
+            `).join('');
+        }
+
+        function updateStats() {
+            document.getElementById('articleCount').textContent = state.articles.length;
+            document.getElementById('tagCount').textContent = allTags.length;
+            document.getElementById('likeCount').textContent = state.totalLikes;
+        }
+
+        function updateProfileUI() {
+            document.getElementById('profileAvatar').textContent = state.profile.avatar;
+            document.getElementById('profileName').textContent = state.profile.name;
+            document.getElementById('profileBio').textContent = state.profile.bio;
+
+            // 根据登录状态更新 UI
+            updateAuthUI();
+        }
+
+        function updateAuthUI() {
+            const loginStatus = document.getElementById('loginStatus');
+            const loginStatusText = document.getElementById('loginStatusText');
+            const authBtn = document.getElementById('authBtn');
+            const editProfileBtn = document.getElementById('editProfileBtn');
+            const uploadArticleBtn = document.getElementById('uploadArticleBtn');
+            const manageArticlesWidget = document.getElementById('manageArticlesWidget');
+
+            if (state.isAuthenticated) {
+                loginStatus.className = 'login-status logged-in';
+                loginStatusText.textContent = `已登录为 ${state.currentUser}`;
+                authBtn.textContent = '退出登录';
+                authBtn.className = 'logout-btn';
+                editProfileBtn.style.display = 'inline-block';
+                uploadArticleBtn.style.display = 'inline-block';
+                manageArticlesWidget.style.display = 'block';
+
+                // 渲染文章管理列表
+                renderManageArticlesList();
+            } else {
+                loginStatus.className = 'login-status guest';
+                loginStatusText.textContent = '访客模式';
+                authBtn.textContent = '登录作者';
+                authBtn.className = 'login-btn';
+                editProfileBtn.style.display = 'none';
+                uploadArticleBtn.style.display = 'none';
+                manageArticlesWidget.style.display = 'none';
+            }
+        }
+
+        function toggleAuth() {
+            if (state.isAuthenticated) {
+                performLogout();
+            } else {
+                openModal('loginModal');
+            }
+        }
+
+        function performLogin() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            if (!username || !password) {
+                showToast('请输入用户名和密码', 'warning');
+                return;
+            }
+
+            if (username === AUTHOR_CREDENTIALS.username && password === AUTHOR_CREDENTIALS.password) {
+                state.isAuthenticated = true;
+                state.currentUser = username;
+
+                saveToStorage();
+                updateAuthUI();
+                closeModal('loginModal');
+
+                // 清空登录表单
+                document.getElementById('loginUsername').value = '';
+                document.getElementById('loginPassword').value = '';
+
+                showToast('登录成功', 'success');
+            } else {
+                showToast('用户名或密码错误', 'error');
+            }
+        }
+
+        function performLogout() {
+            state.isAuthenticated = false;
+            state.currentUser = null;
+
+            localStorage.removeItem('blog_auth');
+            updateAuthUI();
+
+            showToast('已退出登录', 'success');
+        }
+
+        // Article Functions
+        function openArticle(articleId) {
+            const article = state.articles.find(a => a.id === articleId);
+            if (!article) return;
+
+            state.activeArticle = article;
+
+            // Update modal content
+            document.getElementById('modalArticleTitle').textContent = article.title;
+            document.getElementById('modalArticleDate').textContent = `📅 ${article.date}`;
+            document.getElementById('modalArticleReadtime').textContent = `⏱️ ${article.readtime}`;
+            document.getElementById('modalArticleContent').innerHTML = article.content;
+
+            // Render comments
+            renderComments(articleId);
+
+            // Show modal
+            openModal('articleModal');
+        }
+
+        function toggleLike(articleId) {
+            state.likes[articleId] = !state.likes[articleId];
+            state.totalLikes = Object.values(state.likes).filter(Boolean).length;
+
+            saveToStorage();
+            renderArticles();
+            updateStats();
+
+            const message = state.likes[articleId] ? '已点赞' : '已取消点赞';
+            showToast(message, 'success');
+        }
+
+        function shareArticle(articleId) {
+            const article = state.articles.find(a => a.id === articleId);
+            if (!article) return;
+
+            // Simulate share functionality
+            if (navigator.share) {
+                navigator.share({
+                    title: article.title,
+                    text: article.excerpt,
+                    url: window.location.href
+                });
+            } else {
+                // Fallback: copy to clipboard
+                navigator.clipboard.writeText(`${article.title}\n${article.excerpt}\n${window.location.href}`);
+                showToast('链接已复制到剪贴板', 'success');
+            }
+        }
+
+        // Comment Functions
+        function renderComments(articleId) {
+            const comments = state.comments[articleId] || [];
+            document.getElementById('commentCount').textContent = comments.length;
+
+            const container = document.getElementById('commentList');
+            if (comments.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-muted); text-align: center;">暂无评论，快来发表第一条评论吧！</p>';
+            } else {
+                container.innerHTML = comments.map((comment, index) => `
+                    <li class="comment-item">
+                        <div class="comment-header">
+                            <span class="comment-author">${comment.author}</span>
+                            <span class="comment-date">${comment.date}</span>
+                        </div>
+                        <div class="comment-content">${comment.content}</div>
+                        <div class="comment-actions">
+                            <button class="comment-action" onclick="deleteComment(${articleId}, ${index})">删除</button>
+                        </div>
+                    </li>
+                `).join('');
+            }
+        }
+
+        function submitComment() {
+            const input = document.getElementById('commentInput');
+            const content = input.value.trim();
+
+            if (!content) {
+                showToast('请输入评论内容', 'warning');
+                return;
+            }
+
+            if (!state.activeArticle) return;
+
+            const articleId = state.activeArticle.id;
+            if (!state.comments[articleId]) {
+                state.comments[articleId] = [];
+            }
+
+            state.comments[articleId].push({
+                author: state.profile.name || '匿名用户',
+                content: content,
+                date: new Date().toLocaleDateString('zh-CN')
+            });
+
+            saveToStorage();
+            renderComments(articleId);
+            input.value = '';
+
+            showToast('评论发表成功', 'success');
+        }
+
+        function deleteComment(articleId, commentIndex) {
+            if (!state.comments[articleId]) return;
+
+            state.comments[articleId].splice(commentIndex, 1);
+            saveToStorage();
+            renderComments(articleId);
+
+            showToast('评论已删除', 'success');
+        }
+
+        // Filter Functions
+        function filterByTag(tag) {
+            state.currentTag = state.currentTag === tag ? null : tag;
+            state.currentPage = 1;
+
+            applyFilters();
+            renderTags();
+        }
+
+        function filterByMonth(month) {
+            state.filteredArticles = state.articles.filter(article => article.date.startsWith(month));
+            state.currentPage = 1;
+            state.currentTag = null;
+            state.currentFilter = 'all';
+
+            renderArticles();
+            renderTags();
+            updateSectionTitle(`${month} 的文章`);
+        }
+
+        function resetTagFilter() {
+            state.currentTag = null;
+            state.currentPage = 1;
+            applyFilters();
+            renderTags();
+        }
+
+        function applyFilters() {
+            state.filteredArticles = state.articles.filter(article => {
+                // Apply search filter
+                if (state.searchQuery) {
+                    const query = state.searchQuery.toLowerCase();
+                    const matchesSearch = article.title.toLowerCase().includes(query) ||
+                                         article.excerpt.toLowerCase().includes(query);
+                    if (!matchesSearch) return false;
+                }
+
+                // Apply category filter
+                if (state.currentFilter !== 'all' && article.category !== state.currentFilter) {
+                    return false;
+                }
+
+                // Apply tag filter
+                if (state.currentTag && !article.tags.includes(state.currentTag)) {
+                    return false;
+                }
+
+                return true;
+            });
+
+            renderArticles();
+        }
+
+        function updateSectionTitle(title) {
+            document.getElementById('articlesTitle').textContent = title;
+        }
+
+        function showHome() {
+            state.currentPage = 1;
+            state.currentFilter = 'all';
+            state.currentTag = null;
+            state.searchQuery = '';
+            state.filteredArticles = [...state.articles];
+            document.getElementById('searchInput').value = '';
+
+            renderArticles();
+            renderTags();
+            updateSectionTitle('最新文章');
+
+            // Update navigation
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.dataset.section === 'home') {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // Pagination
+        function changePage(page) {
+            state.currentPage = page;
+            renderArticles();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Modal Functions
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function openEditProfileModal() {
+            if (!state.isAuthenticated) {
+                showToast('请先登录作者账号', 'warning');
+                openModal('loginModal');
+                return;
+            }
+
+            document.getElementById('editName').value = state.profile.name;
+            document.getElementById('editBio').value = state.profile.bio;
+            openModal('editProfileModal');
+        }
+
+        function saveProfile() {
+            if (!state.isAuthenticated) {
+                showToast('请先登录作者账号', 'warning');
+                openModal('loginModal');
+                return;
+            }
+
+            const name = document.getElementById('editName').value.trim();
+            const bio = document.getElementById('editBio').value.trim();
+
+            if (!name) {
+                showToast('请输入昵称', 'warning');
+                return;
+            }
+
+            state.profile.name = name;
+            state.profile.bio = bio;
+            state.profile.avatar = name.charAt(0).toUpperCase();
+
+            saveToStorage();
+            updateProfileUI();
+            closeModal('editProfileModal');
+
+            showToast('个人资料已更新', 'success');
+        }
+
+        // Toast Notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toastIcon');
+            const msg = document.getElementById('toastMessage');
+
+            // Set icon based on type
+            const icons = {
+                success: '✓',
+                error: '✗',
+                warning: '⚠'
+            };
+            icon.textContent = icons[type] || '✓';
+
+            // Set message
+            msg.textContent = message;
+
+            // Set type
+            toast.className = 'toast show ' + type;
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Theme Toggle
+        function initThemeToggle() {
+            const toggle = document.getElementById('themeToggle');
+            const sunIcon = document.getElementById('sunIcon');
+            const moonIcon = document.getElementById('moonIcon');
+
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeIcons(savedTheme);
+
+            toggle.addEventListener('click', () => {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                updateThemeIcons(newTheme);
+            });
+
+            function updateThemeIcons(theme) {
+                if (theme === 'dark') {
+                    sunIcon.style.display = 'block';
+                    moonIcon.style.display = 'none';
+                } else {
+                    sunIcon.style.display = 'none';
+                    moonIcon.style.display = 'block';
+                }
+            }
+        }
+
+        // Mobile Menu
+        function initMobileMenu() {
+            const menuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+
+            menuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('active');
+                menuBtn.textContent = mobileMenu.classList.contains('active') ? '✕' : '☰';
+            });
+
+            // Close menu when clicking a link
+            document.querySelectorAll('.mobile-nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.remove('active');
+                    menuBtn.textContent = '☰';
+                });
+            });
+        }
+
+        // Search
+        function initSearch() {
+            const searchInput = document.getElementById('searchInput');
+
+            searchInput.addEventListener('input', (e) => {
+                state.searchQuery = e.target.value;
+                state.currentPage = 1;
+                applyFilters();
+
+                if (state.searchQuery) {
+                    updateSectionTitle(`搜索结果: "${state.searchQuery}"`);
+                } else {
+                    updateSectionTitle('最新文章');
+                }
+            });
+        }
+
+        // Filters
+        function initFilters() {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    state.currentFilter = btn.dataset.filter;
+                    state.currentPage = 1;
+                    applyFilters();
+
+                    const titles = {
+                        'all': '最新文章',
+                        'frontend': '前端文章',
+                        'backend': '后端文章',
+                        'tools': '工具文章'
+                    };
+                    updateSectionTitle(titles[state.currentFilter]);
+                });
+            });
+        }
+
+        // Navigation
+        function initNavigation() {
+            document.querySelectorAll('.nav-link, .mobile-nav-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const section = link.dataset.section;
+
+                    // Update active state
+                    document.querySelectorAll('.nav-link, .mobile-nav-link').forEach(l => {
+                        l.classList.remove('active');
+                        if (l.dataset.section === section) {
+                            l.classList.add('active');
+                        }
+                    });
+
+                    // Handle navigation
+                    if (section === 'home') {
+                        showHome();
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    } else if (section === 'articles') {
+                        document.getElementById('articles').scrollIntoView({ behavior: 'smooth' });
+                    } else if (section === 'archive') {
+                        document.getElementById('archive').scrollIntoView({ behavior: 'smooth' });
+                    } else if (section === 'about') {
+                        document.getElementById('about').scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', initApp);
+
+        // Close modals when clicking outside
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModal(modal.id);
+                }
+            });
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Close modal with Escape key
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal.active').forEach(modal => {
+                    closeModal(modal.id);
+                });
+            }
+
+            // Focus search with Ctrl+K or Cmd+K
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                document.getElementById('searchInput').focus();
+            }
+        });
+    </script>
+</body>
+</html>
